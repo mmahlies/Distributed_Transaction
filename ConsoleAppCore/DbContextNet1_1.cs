@@ -13,7 +13,10 @@ namespace BackOffice
 
     public class DbContextNet1_1 : DbContext
     {
-
+        public DbContextNet1_1()
+        {
+            
+        }
         public DbSet<Teacher> Teacher  { get; set; }
 
         public static readonly ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>

@@ -13,6 +13,22 @@ namespace BackOffice
 
     public class DbContextNet1 : DbContext
     {
+        public DbContextNet1()
+        {
+            this.BindInterceptor(new ZInterceptor());
+            this.ChangeTracker.StateChanged += ChangeTracker_StateChanged;
+            this.ChangeTracker.Tracked += ChangeTracker_Tracked; ;
+        }
+
+        private void ChangeTracker_Tracked(object sender, Microsoft.EntityFrameworkCore.ChangeTracking.EntityTrackedEventArgs e)
+        {
+            var x = "";
+        }
+
+        private void ChangeTracker_StateChanged(object sender, Microsoft.EntityFrameworkCore.ChangeTracking.EntityStateChangedEventArgs e)
+        {
+            var x = "";
+        }
 
         public DbSet<School> School { get; set; }
 
@@ -29,7 +45,9 @@ namespace BackOffice
             // options.UseSqlServer("Data Source=.;Integrated Security=True;Initial Catalog=DBNet2");            
             options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
             options.AddInterceptors(new Interceptor());
-                options.AddInterceptors(new DbTransactionInterceptor1()) ;
+            options.AddInterceptors(new DbTransactionInterceptor1());
+
+
         }
 
 

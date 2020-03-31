@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Z.EntityFramework.Extensions;
 
 namespace BackOfficeAPI
 {
@@ -33,6 +34,7 @@ namespace BackOfficeAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+              
             }
 
             app.UseMvc();
