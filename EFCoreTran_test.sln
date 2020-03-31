@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29021.104
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medical", "ConsoleAppNet\Medical.csproj", "{70E4AF03-4F83-437D-9FD2-969AB674024E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTCNET", "RepositoryNet\DTCNET.csproj", "{00F62BCE-CB5E-4975-9221-D80B5DF6476C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary2Core", "ClassLibrary2Core\ClassLibrary2Core.csproj", "{E4EBF7D4-91F2-49F2-ABE2-98C51601F123}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary3Core", "ClassLibrary3Core\ClassLibrary3Core.csproj", "{AD029BA0-FB39-4312-972F-76E1D44C0CF5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackOffice", "ConsoleAppCore\BackOffice.csproj", "{04170D2C-DBB2-4219-9F14-44D885034129}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackOfficeAPI", "BackOfficeAPI\BackOfficeAPI.csproj", "{EE3EC7E4-4442-4555-AF97-3B7DC706C050}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTCAPI", "DTCAPI\DTCAPI.csproj", "{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{70E4AF03-4F83-437D-9FD2-969AB674024E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70E4AF03-4F83-437D-9FD2-969AB674024E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70E4AF03-4F83-437D-9FD2-969AB674024E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70E4AF03-4F83-437D-9FD2-969AB674024E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00F62BCE-CB5E-4975-9221-D80B5DF6476C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00F62BCE-CB5E-4975-9221-D80B5DF6476C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00F62BCE-CB5E-4975-9221-D80B5DF6476C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00F62BCE-CB5E-4975-9221-D80B5DF6476C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4EBF7D4-91F2-49F2-ABE2-98C51601F123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4EBF7D4-91F2-49F2-ABE2-98C51601F123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4EBF7D4-91F2-49F2-ABE2-98C51601F123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4EBF7D4-91F2-49F2-ABE2-98C51601F123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD029BA0-FB39-4312-972F-76E1D44C0CF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD029BA0-FB39-4312-972F-76E1D44C0CF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD029BA0-FB39-4312-972F-76E1D44C0CF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD029BA0-FB39-4312-972F-76E1D44C0CF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{04170D2C-DBB2-4219-9F14-44D885034129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{04170D2C-DBB2-4219-9F14-44D885034129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{04170D2C-DBB2-4219-9F14-44D885034129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{04170D2C-DBB2-4219-9F14-44D885034129}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE3EC7E4-4442-4555-AF97-3B7DC706C050}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE3EC7E4-4442-4555-AF97-3B7DC706C050}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE3EC7E4-4442-4555-AF97-3B7DC706C050}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE3EC7E4-4442-4555-AF97-3B7DC706C050}.Release|Any CPU.Build.0 = Release|Any CPU
+		{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FB52D16-CA60-41AE-837E-0308D8D07E5E}
+	EndGlobalSection
+EndGlobal
