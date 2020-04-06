@@ -16,6 +16,7 @@ namespace ConsoleAppNet
 
         public DbSet<Student> Student { get; set; }
         public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<SessionToken> Token { get; set; }
 
       
         protected override void OnConfiguring(DbContextOptionsBuilder options)
@@ -24,6 +25,19 @@ namespace ConsoleAppNet
             options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
             options.AddInterceptors(new Interceptor());
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<SessionToken>(eb =>
+                {
+                    eb.HasNoKey();                    
+                });
+        }
+    }
+
+    public class SessionToken
+    {
+        public string Token { get; set; }
     }
 
     public class Student

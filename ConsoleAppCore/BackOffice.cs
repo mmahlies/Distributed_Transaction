@@ -33,16 +33,16 @@ namespace BackOffice
 
             // act as global service Transaction
             DbContextNet1 dbContextNet1 = new DbContextNet1();
-            //   dbContextNet1.Database.ExecuteSqlRaw($"      EXEC sp_bindsession '{token}'     ");
+            //     using (TransactionScope gScope = new TransactionScope())
             TransactionScope gScope = new TransactionScope();
             {
+                dbContextNet1.Database.ExecuteSqlRaw($"      EXEC sp_bindsession '{token}'     ");
                 //  using (TransactionScope innerScope = new TransactionScope())               
                 //   DbContextNet1 dbContextNet2 = new DbContextNet1();
                 dbContextNet1.School.Add(new School() { Name = "school2" });
                 dbContextNet1.School.Add(new School() { Name = "school3" });
                 dbContextNet1.SaveChanges();
                 gScope.Complete();
-
             }
             return true;
         }

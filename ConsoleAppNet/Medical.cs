@@ -6,7 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Transactions;
-
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace ConsoleAppNet
@@ -19,24 +19,31 @@ namespace ConsoleAppNet
             using (TransactionScope scope = new TransactionScope())
             {               
                 DbContextNet1 dbContextNet1 = new DbContextNet1();
+
                 dbContextNet1.Add(new Teacher() { Name = "t1" });
 
-                var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
+               var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
                 dbContextNet1.SaveChanges();
 
-                var token2 = GetToken();                
+                 var token2 = GetToken();
+             //   var token2 = dbContextNet1.Token.FromSqlRaw(@"DECLARE @bind_token varchar(255);  
+               //                 EXECUTE sp_getbindtoken @bind_token OUTPUT;  
+                 //               SELECT @bind_token AS Token;").AsEnumerable().FirstOrDefault().Token;
+    
+
+
                 //using (TransactionScope innerScope = new TransactionScope())
                 //{
                 //    DbContextNet1 dbContextNet2 = new DbContextNet1();
-                //    dbContextNet2.Add(new Teacher() { Name = "t2" });
-                //    dbContextNet2.SaveChanges();
+                //    dbContextNet1.Add(new Teacher() { Name = "t2" });
+                //    dbContextNet1.SaveChanges();
                 //    innerScope.Complete();
                 //}
 
                 CallingBackOffice(token2);
                 scope.Complete();
             }
-            var x = "";
+            var y = "";
 
         }
 
