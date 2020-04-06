@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -15,63 +16,40 @@ namespace BackOffice
     {
         public static void Main(string[] args)
         {
-            Logic(null);
+
         }
 
 
-        public static bool Logic(byte[] token)
+        public static bool Logic(string token)
         {
+            //  BindTransSession(token);
 
+            //SqlConnection connection = new SqlConnection("Server =.; Database = BackOffice; User Id = sa; Password = sasa; Initial Catalog=BackOffice");
+
+            //SqlCommand command = new SqlCommand($"      EXEC sp_bindsession '{token}'; --@out value$                  ", connection);
+            //// enlist embient transcion 
+            //command.Connection.Open();
+            //command.ExecuteNonQuery();
+
+            // act as global service Transaction
             DbContextNet1 dbContextNet1 = new DbContextNet1();
-            bool result = false;
-            TransactionManager.DistributedTransactionStarted += TransactionManager_DistributedTransactionStarted;
-
-            using (TransactionScope gScope = new TransactionScope())
+            //   dbContextNet1.Database.ExecuteSqlRaw($"      EXEC sp_bindsession '{token}'     ");
+            TransactionScope gScope = new TransactionScope();
             {
-               
-                    List<School> list = new List<School>();
+                //  using (TransactionScope innerScope = new TransactionScope())               
+                //   DbContextNet1 dbContextNet2 = new DbContextNet1();
                 dbContextNet1.School.Add(new School() { Name = "school2" });
                 dbContextNet1.School.Add(new School() { Name = "school3" });
-
-
-                DisplayStates(dbContextNet1.ChangeTracker.Entries());
-                //dbContextNet1.BulkSaveChanges();
-                var sb = new StringBuilder();
-                dbContextNet1.BulkSaveChanges( options =>
-                {
-                    options.Log = s => sb.AppendLine(s);
-                });
-
-
-                DisplayStates(dbContextNet1.ChangeTracker.Entries());
-
-                //var s1 = dbContextNet1.School.First();
-                //s1.Name = "mohamed";
-            
-               // dbContextNet1.School.AddRange(list);
-              
-              //  dbContextNet1.SaveChanges();
-            
-                //DbContextNet1 dbContextNet2 = new DbContextNet1();
-                ////dbContextNet2.Database.UseTransaction(DbContextNet1_1.Database. );
-                //dbContextNet2.Add(new School() { Name = "school" });                
-
-                if (token == null)
-                {
-                    gScope.Complete();
-                }
+                dbContextNet1.SaveChanges();
+                gScope.Complete();
 
             }
-            //    from medical
-            if (token != null)
-            {
-                //DTC.Dtc dtc = new DTC.Dtc();
-                //result = dtc.SyncDTCTransaction(token, SqlAggregate.SqlText.ToString());
+            return true;
+        }
 
-                result = CallingDtcAPI(token, SqlAggregate.SqlText.ToString());
+        private static void BindTransSession(string token)
+        {
 
-            }
-            return result;
         }
 
         private static void DisplayStates(IEnumerable<EntityEntry> entries)
@@ -80,9 +58,9 @@ namespace BackOffice
             Console.WriteLine("_________________________________");
             foreach (var entry in entries)
             {
-               
+
                 Console.WriteLine($"Entity:{entry.Entity.GetType().Name},   State: { entry.State.ToString()}             ");
-             
+
             }
             Console.WriteLine("_________________________________");
         }

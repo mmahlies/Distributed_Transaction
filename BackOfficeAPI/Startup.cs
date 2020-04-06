@@ -26,6 +26,7 @@ namespace BackOfficeAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -33,11 +34,13 @@ namespace BackOfficeAPI
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
-              
+                app.UseDeveloperExceptionPage();              
             }
 
             app.UseMvc();
+            app.UseSession();
+
+
         }
     }
 }

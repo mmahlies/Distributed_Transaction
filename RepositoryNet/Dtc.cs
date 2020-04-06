@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.IO.Pipes;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,32 +12,46 @@ namespace DTC
 {
     public class Dtc
     {
-        public bool SyncDTCTransaction(byte[] token, string sql)
+        public static void Main(string[] args)
         {
 
-            var targetFrameworkAttribute = System.Reflection.Assembly.GetExecutingAssembly()
-    .GetCustomAttributes(typeof(System.Runtime.Versioning.TargetFrameworkAttribute), false)
-    .SingleOrDefault();
+            Console.Read();
+        }
 
-          
-            var tran = TransactionInterop.GetTransactionFromTransmitterPropagationToken(token);
-
-          
-            using (TransactionScope transactionScope = new TransactionScope(tran))
+        public Transaction SyncDTCTransaction(byte[] token)
+        {
+            var x = Transaction.Current;
+            
+            using (NamedPipeServerStream s = new NamedPipeServerStream("n1", PipeDirection.InOut, 1, PipeTransmissionMode.Message))
             {
-                using (SqlConnection connection = new SqlConnection("Server=.;Database=BackOffice;User Id=sa;Password=sasa;"))
+                s.WaitForConnection();
+                byte[] buffer = new byte[int.MaxValue];
+
+                do
                 {
-                    SqlCommand command = new SqlCommand();
-                    command.Connection = connection;
-                    command.CommandText = sql;
-                    connection.Open();
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {                                               
-                        reader.Close();
-                    }
-                }
-                transactionScope.Complete();
+                    s.Read(buffer, 0, buffer.Length);
+                 
+                } while (true);
             }
+            var tran = TransactionInterop.GetTransactionFromTransmitterPropagationToken(token);
+            return tran;
+
+
+            //using (TransactionScope transactionScope = new TransactionScope(tran))
+            //{
+            //    using (SqlConnection connection = new SqlConnection("Server=.;Database=BackOffice;User Id=sa;Password=sasa;"))
+            //    {
+            //        SqlCommand command = new SqlCommand();
+            //        command.Connection = connection;
+            //        command.CommandText = sql;
+            //        connection.Open();
+            //        using (SqlDataReader reader = command.ExecuteReader())
+            //        {                                               
+            //            reader.Close();
+            //        }
+            //    }
+            //    transactionScope.Complete();
+            //}
 
 
 
@@ -52,13 +67,15 @@ namespace DTC
             //}
 
 
-            return true;
+            //    return true;
 
-            
+
 
             // exexute logic with in the distributed trnsaction
 
 
         }
+
+   
     }
 }

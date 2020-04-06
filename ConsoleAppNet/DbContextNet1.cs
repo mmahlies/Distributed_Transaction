@@ -15,12 +15,13 @@ namespace ConsoleAppNet
     {
 
         public DbSet<Student> Student { get; set; }
+        public DbSet<Teacher> Teacher { get; set; }
 
       
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {           
            // options.UseSqlServer("Data Source=.;Integrated Security=True;Initial Catalog=DBNet1");
-            options.UseSqlServer("Server=.;Database=Medical;User Id=sa;Password=sasa;");
+            options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
             options.AddInterceptors(new Interceptor());
         }
     }
@@ -30,4 +31,10 @@ namespace ConsoleAppNet
         public int Id { get; set; }
         public string Name { get; set; }
     }
+    public class Teacher
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
 }

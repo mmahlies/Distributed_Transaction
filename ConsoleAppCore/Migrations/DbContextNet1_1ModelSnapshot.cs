@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackOffice.Migrations
 {
-    [DbContext(typeof(DbContextNet1_1))]
+    [DbContext(typeof(DbContextNet1))]
     partial class DbContextNet1_1ModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

@@ -7,13 +7,7 @@ namespace ClassLibrary3Core
 {
     public class Class1
     {
-        public void test() {
-            using (TransactionScope scope = new TransactionScope())
-            {
-
-                var query = HttpUtility.ParseQueryString(string.Empty);
-            }
-        }
+       
         
 
     }

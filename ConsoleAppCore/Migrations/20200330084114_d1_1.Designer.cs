@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackOffice.Migrations
 {
-    [DbContext(typeof(DbContextNet1_1))]
+    [DbContext(typeof(DbContextNet1))]
     [Migration("20200330084114_d1_1")]
     partial class d1_1
     {

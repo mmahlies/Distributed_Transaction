@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Http;
+
 
 namespace BackOfficeAPI.Controllers
 {
@@ -14,6 +16,8 @@ namespace BackOfficeAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+
+           
             return new string[] { "value1", "value2" };
         }
 
@@ -26,9 +30,12 @@ namespace BackOfficeAPI.Controllers
 
         // POST api/values
         [HttpPost]
-        public bool Post([FromBody]  byte[] token)
+        public void Post([FromBody]  string token)
         {
-           return  BackOffice.BackOffice.Logic(token);
+          
+            
+
+            BackOffice.BackOffice.Logic(token);
         }
 
         // PUT api/values/5
