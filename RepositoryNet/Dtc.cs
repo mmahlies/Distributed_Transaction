@@ -15,43 +15,22 @@ namespace DTC
         public static void Main(string[] args)
         {
 
-            Console.Read();
+         
         }
 
-        public Transaction SyncDTCTransaction(byte[] token)
+        public void SyncDTCTransaction(byte[] token)
         {
-            var x = Transaction.Current;
-            
-            using (NamedPipeServerStream s = new NamedPipeServerStream("n1", PipeDirection.InOut, 1, PipeTransmissionMode.Message))
+
+
+            Transaction tran = TransactionInterop.GetTransactionFromTransmitterPropagationToken(token);
+
+            using (TransactionScope transactionScope = new TransactionScope(tran))
             {
-                s.WaitForConnection();
-                byte[] buffer = new byte[int.MaxValue];
-
-                do
-                {
-                    s.Read(buffer, 0, buffer.Length);
-                 
-                } while (true);
+                DbContextNet2 dbContextNet2 = new DbContextNet2();
+                dbContextNet2.School.Add(new School() { Name = "dtc" });
+                dbContextNet2.SaveChanges();
+                transactionScope.Complete();
             }
-            var tran = TransactionInterop.GetTransactionFromTransmitterPropagationToken(token);
-            return tran;
-
-
-            //using (TransactionScope transactionScope = new TransactionScope(tran))
-            //{
-            //    using (SqlConnection connection = new SqlConnection("Server=.;Database=BackOffice;User Id=sa;Password=sasa;"))
-            //    {
-            //        SqlCommand command = new SqlCommand();
-            //        command.Connection = connection;
-            //        command.CommandText = sql;
-            //        connection.Open();
-            //        using (SqlDataReader reader = command.ExecuteReader())
-            //        {                                               
-            //            reader.Close();
-            //        }
-            //    }
-            //    transactionScope.Complete();
-            //}
 
 
 

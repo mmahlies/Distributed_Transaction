@@ -187,23 +187,7 @@
   <ItemGroup>
     <Compile Include="Class1.cs" />
     <Compile Include="DbContextNet1.cs" />
-    <Compile Include="Migrations\20200324133500_intitail.cs" />
-    <Compile Include="Migrations\20200324133500_intitail.designer.cs">
-      <DependentUpon>20200324133500_intitail.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200330191045_m2.cs" />
-    <Compile Include="Migrations\20200330191045_m2.designer.cs">
-      <DependentUpon>20200330191045_m2.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200331082706_m1.cs" />
-    <Compile Include="Migrations\20200331082706_m1.designer.cs">
-      <DependentUpon>20200331082706_m1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\20200331083032_m3.cs" />
-    <Compile Include="Migrations\20200331083032_m3.designer.cs">
-      <DependentUpon>20200331083032_m3.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\DbContextNet1ModelSnapshot.cs" />
+    <Compile Include="MedicalContext.cs" />
     <Compile Include="Medical.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

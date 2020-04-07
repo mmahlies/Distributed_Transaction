@@ -14,40 +14,45 @@ namespace ConsoleAppNet
     public class Program
     {
         public static void Main(string[] args)
-        {           
-         //   TransactionManager.DistributedTransactionStarted += TransactionManager_DistributedTransactionStarted;
+        {
+
+            //   TransactionManager.DistributedTransactionStarted += TransactionManager_DistributedTransactionStarted;
+
+            string token2;
             using (TransactionScope scope = new TransactionScope())
-            {               
-                DbContextNet1 dbContextNet1 = new DbContextNet1();
+            {
+                var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
+                MedicalContext.MedicalContext medicalContext = new MedicalContext.MedicalContext();
+                medicalContext.Student.Add(new MedicalContext.Student() { Name = "student from medical " });
 
-                dbContextNet1.Add(new Teacher() { Name = "t1" });
-
-               var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
-                dbContextNet1.SaveChanges();
-
-                 var token2 = GetToken();
-             //   var token2 = dbContextNet1.Token.FromSqlRaw(@"DECLARE @bind_token varchar(255);  
-               //                 EXECUTE sp_getbindtoken @bind_token OUTPUT;  
-                 //               SELECT @bind_token AS Token;").AsEnumerable().FirstOrDefault().Token;
-    
-
-
-                //using (TransactionScope innerScope = new TransactionScope())
-                //{
-                //    DbContextNet1 dbContextNet2 = new DbContextNet1();
-                //    dbContextNet1.Add(new Teacher() { Name = "t2" });
-                //    dbContextNet1.SaveChanges();
-                //    innerScope.Complete();
-                //}
+                string sessionToken = GetSessionTokenFromAdo();
+                string sessionToken2 = GetSessionTokenFromDbContext(medicalContext);
+                token2 = sessionToken2;
+                medicalContext.SaveChanges();
 
                 CallingBackOffice(token2);
                 scope.Complete();
             }
-            var y = "";
+            //using (TransactionScope innerScope = new TransactionScope(TransactionScopeOption.Required))
+            //{
+            //    DbContextNet1 dbContextNet2 = new DbContextNet1();
+            //    dbContextNet2.Database.ExecuteSqlRaw($"      EXEC sp_bindsession '{token2}'     ");
+            //    dbContextNet2.Add(new Teacher() { Name = "t2" });
+            //    dbContextNet2.SaveChanges();
+            //    innerScope.Complete();
+            //}
+            var x = "";
 
         }
 
-        private static string GetToken()
+        private static string GetSessionTokenFromDbContext(MedicalContext.MedicalContext dbContextNet1)
+        {
+            return dbContextNet1.SessionToken.FromSqlRaw(@"DECLARE @bind_token varchar(255);
+                                                                        EXECUTE sp_getbindtoken @bind_token OUTPUT;
+                                                                        SELECT @bind_token AS Token; ").AsEnumerable().First().Token;
+        }
+
+        private static string GetSessionTokenFromAdo()
         {
             string result = "";
             using (SqlConnection connection = new SqlConnection("Data Source=.;User Id=sa;Password=sasa;Initial Catalog=BackOffice"))

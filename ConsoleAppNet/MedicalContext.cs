@@ -8,22 +8,20 @@ using System.Threading.Tasks;
 
 
 
-namespace ConsoleAppNet
+namespace ConsoleAppNet.MedicalContext
 {
 
-    public class DbContextNet1 : DbContext
+    public class MedicalContext : DbContext
     {
 
         public DbSet<Student> Student { get; set; }
-        public DbSet<Teacher> Teacher { get; set; }
         public DbSet<SessionToken> SessionToken { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             // options.UseSqlServer("Data Source=.;Integrated Security=True;Initial Catalog=DBNet1");
-            options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
-            options.AddInterceptors(new Interceptor());
+            options.UseSqlServer("Server=.;Database=Medical;User Id=sa;Password=sasa;");
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,15 +36,10 @@ namespace ConsoleAppNet
         public int Id { get; set; }
         public string Name { get; set; }
     }
-    public class Teacher
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-    }
+
 
     public class SessionToken
     {
-
         public String Token { get; set; }
     }
 

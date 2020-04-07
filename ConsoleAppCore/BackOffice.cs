@@ -22,48 +22,53 @@ namespace BackOffice
 
         public static bool Logic(string token)
         {
-            //  BindTransSession(token);
-
-            //SqlConnection connection = new SqlConnection("Server =.; Database = BackOffice; User Id = sa; Password = sasa; Initial Catalog=BackOffice");
-
-            //SqlCommand command = new SqlCommand($"      EXEC sp_bindsession '{token}'; --@out value$                  ", connection);
-            //// enlist embient transcion 
-            //command.Connection.Open();
-            //command.ExecuteNonQuery();
-
-            // act as global service Transaction
-            DbContextNet1 dbContextNet1 = new DbContextNet1();
-            //     using (TransactionScope gScope = new TransactionScope())
-            TransactionScope gScope = new TransactionScope();
+            try
             {
-                dbContextNet1.Database.ExecuteSqlRaw($"      EXEC sp_bindsession '{token}'     ");
-                //  using (TransactionScope innerScope = new TransactionScope())               
-                //   DbContextNet1 dbContextNet2 = new DbContextNet1();
-                dbContextNet1.School.Add(new School() { Name = "school2" });
-                dbContextNet1.School.Add(new School() { Name = "school3" });
-                dbContextNet1.SaveChanges();
-                gScope.Complete();
+                DependentTransaction dependentTransaction;
+                using (TransactionScope globalScope = new TransactionScope())
+                {
+                    BackOfficeDBContext dbContextNet = new BackOfficeDBContext();
+                    dbContextNet.Database.ExecuteSqlRaw($"EXEC sp_bindsession '{token}'");
+                    dependentTransaction = Transaction.Current.DependentClone(DependentCloneOption.BlockCommitUntilComplete);
+
+                    using (TransactionScope innerScope1 = new TransactionScope(dependentTransaction))
+                    {
+                        // DbContextNet1 dbContextNet2 = new DbContextNet1();
+                        BackOfficeDBContext dbContextNet1 = new BackOfficeDBContext();
+                        //   dbContextNet1.Database.ExecuteSqlRaw($"EXEC sp_bindsession '{token}'");                    
+                        dbContextNet1.Teacher.Add(new Teacher() { Name = "Teacher root1" });
+                        dbContextNet1.SaveChanges();
+                        innerScope1.Complete();
+                        using (TransactionScope inner2Scope = new TransactionScope(dependentTransaction))
+                        {
+                            BackOfficeDBContext dbContextNet2 = new BackOfficeDBContext();
+                            dbContextNet2.Teacher.Add(new Teacher() { Name = "teacher nested" });
+                            dbContextNet2.SaveChanges();
+                            inner2Scope.Complete();
+                        }
+                    }
+
+                    using (TransactionScope innerScope1 = new TransactionScope(dependentTransaction))
+                    {
+                        BackOfficeDBContext dbContextNet1 = new BackOfficeDBContext();
+                        dbContextNet1.Teacher.Add(new Teacher() { Name = "Teacher root bulk save changes" });
+                        dbContextNet1.BulkSaveChanges();
+                        innerScope1.Complete();
+                    }
+                    return true;
+                }
             }
-            return true;
-        }
-
-        private static void BindTransSession(string token)
-        {
-
-        }
-
-        private static void DisplayStates(IEnumerable<EntityEntry> entries)
-        {
-            entries = entries.ToList();
-            Console.WriteLine("_________________________________");
-            foreach (var entry in entries)
+            catch (Exception ex)
             {
-
-                Console.WriteLine($"Entity:{entry.Entity.GetType().Name},   State: { entry.State.ToString()}             ");
-
+                // ex handling 
+                var x = "";
+                return false;
+                //  throw;
             }
-            Console.WriteLine("_________________________________");
+
         }
+
+      
 
         private static void TransactionManager_DistributedTransactionStarted(object sender, TransactionEventArgs e)
         {
