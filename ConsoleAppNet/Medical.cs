@@ -15,10 +15,22 @@ namespace ConsoleAppNet
     {
         public static void Main(string[] args)
         {
+            //   while (true)
+            {
+                // Console.Read();
+                MedicalDTC();
+                //  Trans();
 
+            }
             //   TransactionManager.DistributedTransactionStarted += TransactionManager_DistributedTransactionStarted;
 
-            string token2;
+
+
+
+        }
+
+        private static void MedicalDTC()
+        {
             using (TransactionScope scope = new TransactionScope())
             {
                 var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
@@ -27,24 +39,36 @@ namespace ConsoleAppNet
 
                 string sessionToken = GetSessionTokenFromAdo();
                 string sessionToken2 = GetSessionTokenFromDbContext(medicalContext);
-                token2 = sessionToken2;
+
                 medicalContext.SaveChanges();
 
-                CallingBackOffice(token2);
-                scope.Complete();
+              CallingBackOffice(sessionToken2);
+              scope.Complete();
+              
             }
-            //using (TransactionScope innerScope = new TransactionScope(TransactionScopeOption.Required))
-            //{
-            //    DbContextNet1 dbContextNet2 = new DbContextNet1();
-            //    dbContextNet2.Database.ExecuteSqlRaw($"      EXEC sp_bindsession '{token2}'     ");
-            //    dbContextNet2.Add(new Teacher() { Name = "t2" });
-            //    dbContextNet2.SaveChanges();
-            //    innerScope.Complete();
-            //}
-            var x = "";
 
+            var x = "";
         }
 
+
+        public static void Trans()
+        {
+            using (TransactionScope innerScope = new TransactionScope())
+            {
+                DbContextNet1 dbContextNet2 = new DbContextNet1();
+                dbContextNet2.Add(new Teacher() { Name = "t1" });
+                dbContextNet2.SaveChanges();
+                //    innerScope.Complete();
+                //using (TransactionScope innerScope2 = new TransactionScope())
+                //{
+                //    DbContextNet1 dbContextNet3 = new DbContextNet1();
+                //    dbContextNet3.Add(new Teacher() { Name = "t2" });
+                //    dbContextNet3.SaveChanges();
+                //    //innerScope2.Complete();
+
+                //}
+            }
+        }
         private static string GetSessionTokenFromDbContext(MedicalContext.MedicalContext dbContextNet1)
         {
             return dbContextNet1.SessionToken.FromSqlRaw(@"DECLARE @bind_token varchar(255);

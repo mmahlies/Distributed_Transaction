@@ -16,45 +16,77 @@ namespace BackOffice
     {
         public static void Main(string[] args)
         {
+            using (TransactionScope inner2Scope = new TransactionScope())
+            {
+                BackOfficeDBContext dbContextNet = new BackOfficeDBContext();
+                dbContextNet.Teacher.Add(new Teacher() { Name = "teacher nested" });
+                dbContextNet.SaveChanges();
+              
+                BackOfficeDBContext2.BackOfficeDBContext2 backOfficeDBContext2 = new BackOfficeDBContext2.BackOfficeDBContext2();
+                var teachers = backOfficeDBContext2.Teacher.ToList();
+                backOfficeDBContext2.Teacher.Add(new BackOfficeDBContext2.Teacher() { Name = "Teacher from backOfficeDBContext2" });
+                backOfficeDBContext2.SaveChanges();
 
+                inner2Scope.Complete();
+            }
         }
 
 
         public static bool Logic(string token)
         {
+            DependentTransaction dependentTransaction;
+            BackOfficeDBContext dbContextNet = new BackOfficeDBContext();
+            Transaction transaction = null;
             try
             {
-                DependentTransaction dependentTransaction;
                 using (TransactionScope globalScope = new TransactionScope())
                 {
-                    BackOfficeDBContext dbContextNet = new BackOfficeDBContext();
                     dbContextNet.Database.ExecuteSqlRaw($"EXEC sp_bindsession '{token}'");
-                    dependentTransaction = Transaction.Current.DependentClone(DependentCloneOption.BlockCommitUntilComplete);
+                    var x1 = Transaction.Current?.TransactionInformation?.LocalIdentifier;      
+                    using (TransactionScope innerScope1 = new TransactionScope())
+                    {                     
+                        transaction = dbContextNet.Database.GetEnlistedTransaction();
+                        var x3 = Transaction.Current?.TransactionInformation?.LocalIdentifier;
 
-                    using (TransactionScope innerScope1 = new TransactionScope(dependentTransaction))
-                    {
-                        // DbContextNet1 dbContextNet2 = new DbContextNet1();
-                        BackOfficeDBContext dbContextNet1 = new BackOfficeDBContext();
-                        //   dbContextNet1.Database.ExecuteSqlRaw($"EXEC sp_bindsession '{token}'");                    
-                        dbContextNet1.Teacher.Add(new Teacher() { Name = "Teacher root1" });
-                        dbContextNet1.SaveChanges();
-                        innerScope1.Complete();
-                        using (TransactionScope inner2Scope = new TransactionScope(dependentTransaction))
+                        dbContextNet.Teacher.Add(new Teacher() { Name = "Teacher root1" });
+                        dbContextNet.SaveChanges();
+                    
+                        using (TransactionScope inner2Scope = new TransactionScope())
                         {
-                            BackOfficeDBContext dbContextNet2 = new BackOfficeDBContext();
-                            dbContextNet2.Teacher.Add(new Teacher() { Name = "teacher nested" });
-                            dbContextNet2.SaveChanges();
+                         
+                            dbContextNet.Teacher.Add(new Teacher() { Name = "teacher nested" });
+                            dbContextNet.SaveChanges();
+
+                            //   dbContextNet.Database.ExecuteSqlRaw($"rollback tran");
+                            //    Transaction.Current.Rollback();
+                            //     dbContextNet.Database.ExecuteSqlRaw($"EXEC sp_bindsession NULL");
+                            //     throw new Exception();
+                            // inner2Scope.RollBack(dbContextNet);
+
+                            BackOfficeDBContext2.BackOfficeDBContext2 backOfficeDBContext2 = new BackOfficeDBContext2.BackOfficeDBContext2();
+                            var teachers = backOfficeDBContext2.Teacher.ToList();
+                            backOfficeDBContext2.Teacher.Add(new BackOfficeDBContext2.Teacher() { Name = "Teacher from backOfficeDBContext2" });
+                            backOfficeDBContext2.SaveChanges();
+
                             inner2Scope.Complete();
                         }
+                        innerScope1.Complete();
+                      
                     }
 
-                    using (TransactionScope innerScope1 = new TransactionScope(dependentTransaction))
-                    {
-                        BackOfficeDBContext dbContextNet1 = new BackOfficeDBContext();
-                        dbContextNet1.Teacher.Add(new Teacher() { Name = "Teacher root bulk save changes" });
-                        dbContextNet1.BulkSaveChanges();
-                        innerScope1.Complete();
-                    }
+
+
+                    //using (TransactionScope innerScope1 = new TransactionScope())
+                    //{
+                    //    var x5 = Transaction.Current?.TransactionInformation?.LocalIdentifier;
+                    //    BackOfficeDBContext dbContextNet1 = new BackOfficeDBContext();
+                    //    dbContextNet1.Teacher.Add(new Teacher() { Name = "Teacher root bulk save changes" });
+                    //    dbContextNet1.BulkSaveChanges();
+                    //    innerScope1.Complete();
+                    //}
+
+                    //   globalScope.Dispose();
+
                     return true;
                 }
             }
@@ -62,13 +94,16 @@ namespace BackOffice
             {
                 // ex handling 
                 var x = "";
+
+                //  dbContextNet.Database.ExecuteSqlRaw($"EXEC sp_bindsession NULL");
+
                 return false;
-                //  throw;
+                //    throw;
             }
 
         }
 
-      
+
 
         private static void TransactionManager_DistributedTransactionStarted(object sender, TransactionEventArgs e)
         {

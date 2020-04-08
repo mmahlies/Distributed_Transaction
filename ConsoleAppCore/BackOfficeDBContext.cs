@@ -21,6 +21,7 @@ namespace BackOffice
 
         public DbSet<School> School { get; set; }
         public DbSet<Teacher> Teacher { get; set; }
+        public DbSet<SessionToken> SessionToken { get; set; }
 
         public static readonly ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
         {
@@ -31,6 +32,12 @@ namespace BackOffice
             // options.UseSqlServer("Data Source=.;Integrated Security=True;Initial Catalog=DBNet2");            
             options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
 
+        }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<SessionToken>(eb => {
+                eb.HasNoKey();
+            });
         }
 
 
@@ -46,5 +53,10 @@ namespace BackOffice
     {
         public int Id { get; set; }
         public string Name { get; set; }
+    }
+    public class SessionToken
+    {
+
+        public String Token { get; set; }
     }
 }
