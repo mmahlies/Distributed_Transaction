@@ -32,17 +32,15 @@ namespace BackOffice
         }
 
 
-        public  bool Logic(DbContext generalDbContextNet, string token)
+        public  bool Logic(DbContext generalDbContextNet)
         {
-            DependentTransaction dependentTransaction;
-            BackOfficeDBContext dbContextNet = (BackOfficeDBContext)generalDbContextNet;
-              Transaction transaction = null;
+        
+            BackOfficeDBContext dbContextNet = (BackOfficeDBContext)generalDbContextNet;       
             try
             {
-              // BackOfficeDBContext dbContextNet = new BackOfficeDBContext();         
-                using (TransactionScope globalScope = new TransactionScope())
-                {
-                BindSessionToken(token, dbContextNet);
+                   
+             
+            //    BindSessionToken(token, dbContextNet);
                     using (TransactionScope innerScope1 = new TransactionScope())
                     {
 
@@ -60,7 +58,8 @@ namespace BackOffice
                             dbContextNet.SaveChanges();
                             inner2Scope.Complete();
                         }
-                        innerScope1.Complete();
+                    //    innerScope1.Complete();
+                    innerScope1.RollBack(dbContextNet);
                     }
 
 
@@ -74,10 +73,9 @@ namespace BackOffice
                     //    innerScope1.Complete();
                     //}
 
-
-                    //   globalScope.Dispose();
+                
                     return true;
-                }
+                
             }
             catch (Exception ex)
             {
@@ -92,14 +90,7 @@ namespace BackOffice
 
         }
 
-        private static void BindSessionToken(string token, BackOfficeDBContext dbContextNet)
-        {
-            //   dbContextNet.Database.ExecuteSqlCommand($"EXEC sp_bindsession '{token}'");
-            var command = dbContextNet.Database.GetDbConnection().CreateCommand();
-            command.CommandText = $"EXEC sp_bindsession '{token}'";
-            dbContextNet.Database.OpenConnection();
-            var result = command.ExecuteNonQuery();
-        }
+    
 
         private static void TransactionManager_DistributedTransactionStarted(object sender, TransactionEventArgs e)
         {

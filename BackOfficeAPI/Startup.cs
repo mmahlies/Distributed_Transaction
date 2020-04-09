@@ -31,6 +31,7 @@ namespace BackOfficeAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSession();
             services.AddScoped<DbContext, BackOfficeDBContext>();
+            services.AddScoped<Itest, Test>();
 
             services.AddScoped<TransactionFilter>();
             services.AddDbContext<BackOfficeDBContext>();

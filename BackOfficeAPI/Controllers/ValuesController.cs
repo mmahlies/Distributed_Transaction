@@ -13,12 +13,16 @@ namespace BackOfficeAPI.Controllers
     public class ValuesController : ControllerBase
     {
         private DbContext _BackOfficeDBContext;
-        public ValuesController(DbContext BackOfficeDBContext)
+        private Itest _test;
+        public ValuesController(DbContext BackOfficeDBContext, Itest test)
         {
             _BackOfficeDBContext = BackOfficeDBContext;
+          //  test.Value = 1;
+            this._test = test;
             var x = "";
         }
         // GET api/values
+     
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
@@ -42,9 +46,9 @@ namespace BackOfficeAPI.Controllers
         public void Post([FromBody]  string token)
         {
 
-           
+            var x = this._test;
             BackOffice.BackOffice backOffice = new BackOffice.BackOffice();
-            backOffice.Logic(_BackOfficeDBContext, token);
+            backOffice.Logic(_BackOfficeDBContext);
         }
 
         // PUT api/values/5

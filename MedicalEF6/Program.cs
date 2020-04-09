@@ -28,18 +28,18 @@ namespace MedicalEF6
         {
             using (TransactionScope scope = new TransactionScope())
             {
-             //   var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
+                //   var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
                 MedicalContext medicalContext = new MedicalContext();
                 medicalContext.Student.Add(new Student() { Name = "student from medical " });
 
                 string sessionToken = GetSessionTokenFromAdo();
                 string sessionToken2 = GetSessionTokenFromDbContext(medicalContext);
 
-                var result =    medicalContext.SaveChanges();
-              
+                var result = medicalContext.SaveChanges();
+
 
                 CallingBackOffice(sessionToken2);
-             scope.Complete();
+                scope.Complete();
 
             }
 
@@ -91,7 +91,7 @@ namespace MedicalEF6
         {
             HttpClient client = new HttpClient();
 
-            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost.fiddler:54645/api/values");
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:54645/api/values");
             //; charset=utf-8
             var serializeToken = JsonConvert.SerializeObject(token);
 
