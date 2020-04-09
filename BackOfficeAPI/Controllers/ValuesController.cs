@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace BackOfficeAPI.Controllers
 {
@@ -12,6 +12,12 @@ namespace BackOfficeAPI.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private DbContext _BackOfficeDBContext;
+        public ValuesController(DbContext BackOfficeDBContext)
+        {
+            _BackOfficeDBContext = BackOfficeDBContext;
+            var x = "";
+        }
         // GET api/values
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
@@ -28,14 +34,17 @@ namespace BackOfficeAPI.Controllers
             return "value";
         }
 
+
+        [ServiceFilter(typeof(TransactionFilter))]
+
         // POST api/values
         [HttpPost]
         public void Post([FromBody]  string token)
         {
-          
-            
 
-            BackOffice.BackOffice.Logic(token);
+           
+            BackOffice.BackOffice backOffice = new BackOffice.BackOffice();
+            backOffice.Logic(_BackOfficeDBContext, token);
         }
 
         // PUT api/values/5

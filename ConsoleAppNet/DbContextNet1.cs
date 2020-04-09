@@ -22,8 +22,7 @@ namespace ConsoleAppNet
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             // options.UseSqlServer("Data Source=.;Integrated Security=True;Initial Catalog=DBNet1");
-            options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
-            options.AddInterceptors(new Interceptor());
+            options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");            
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

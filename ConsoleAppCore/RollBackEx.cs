@@ -11,7 +11,7 @@ namespace BackOffice
         {
             public static void RollBack(this TransactionScope transactionScope, DbContext dbContext)
             {
-                dbContext.Database.ExecuteSqlRaw($"rollback tran");
+              dbContext.Database.ExecuteSqlCommand($"rollback tran");
             }
         }
     

@@ -185,7 +185,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="DbContextNet1.cs" />
     <Compile Include="MedicalContext.cs" />
     <Compile Include="Medical.cs" />

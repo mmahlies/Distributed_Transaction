@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29021.104
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Medical", "ConsoleAppNet\Medical.csproj", "{70E4AF03-4F83-437D-9FD2-969AB674024E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalEFCore", "ConsoleAppNet\MedicalEFCore.csproj", "{70E4AF03-4F83-437D-9FD2-969AB674024E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTCNET", "RepositoryNet\DTCNET.csproj", "{00F62BCE-CB5E-4975-9221-D80B5DF6476C}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BackOfficeAPI", "BackOfficeAPI\BackOfficeAPI.csproj", "{EE3EC7E4-4442-4555-AF97-3B7DC706C050}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DTCAPI", "DTCAPI\DTCAPI.csproj", "{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedicalEF6", "MedicalEF6\MedicalEF6.csproj", "{648C1A67-E393-4F03-92BD-D5212FC16DBB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{043D8FB7-C4A4-428D-B80C-16D0FC61A8E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{648C1A67-E393-4F03-92BD-D5212FC16DBB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{648C1A67-E393-4F03-92BD-D5212FC16DBB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{648C1A67-E393-4F03-92BD-D5212FC16DBB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{648C1A67-E393-4F03-92BD-D5212FC16DBB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

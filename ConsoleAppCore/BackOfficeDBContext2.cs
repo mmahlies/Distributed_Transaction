@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 
 
+
 namespace BackOffice.BackOfficeDBContext2
 {
 
@@ -21,24 +22,19 @@ namespace BackOffice.BackOfficeDBContext2
 
         public DbSet<School> School { get; set; }
         public DbSet<Teacher> Teacher { get; set; }
-        public DbSet<SessionToken> SessionToken { get; set; }
 
-        public static readonly ILoggerFactory loggerFactory = LoggerFactory.Create(builder =>
-        {
-
-        });
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
             // options.UseSqlServer("Data Source=.;Integrated Security=True;Initial Catalog=DBNet2");            
             options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
 
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<SessionToken>(eb => {
-                eb.HasNoKey();
-            });
-        }
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<SessionToken>(eb => {
+        //        eb.HasNoKey();
+        //    });
+        //}
 
 
     }

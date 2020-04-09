@@ -15,7 +15,7 @@ namespace BackOffice
     {
         public DbContextNet1()
         {
-            this.BindInterceptor(new ZInterceptor());
+          
             this.ChangeTracker.StateChanged += ChangeTracker_StateChanged;
             this.ChangeTracker.Tracked += ChangeTracker_Tracked; ;
         }
@@ -44,7 +44,7 @@ namespace BackOffice
             options.UseLoggerFactory(loggerFactory);
             // options.UseSqlServer("Data Source=.;Integrated Security=True;Initial Catalog=DBNet2");            
             options.UseSqlServer("Server=.;Database=BackOffice;User Id=sa;Password=sasa;");
-            options.AddInterceptors(new Interceptor());
+         
             
 
 
