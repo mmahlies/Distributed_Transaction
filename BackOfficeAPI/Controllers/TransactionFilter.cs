@@ -8,7 +8,7 @@ namespace BackOfficeAPI.Controllers
         private DbContext _BackOfficeDBContext;
         public TransactionFilter(DbContext BackOfficeDBContext)
         {
-            _BackOfficeDBContext = BackOfficeDBContext;
+       //     _BackOfficeDBContext = BackOfficeDBContext;
             var x = "";
         }
         public void OnActionExecuted(ActionExecutedContext context)

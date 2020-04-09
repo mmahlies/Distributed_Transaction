@@ -116,7 +116,7 @@ namespace ConsoleAppNet
 
 
             // back office api
-            HttpResponseMessage response = client.PostAsJsonAsync<string>("http://localhost:54645/api/values", token).Result;
+            HttpResponseMessage response = client.PostAsJsonAsync<string>("http://localhost.fiddler:54645/api/values", token).Result;
             var x = "";
         }
 
