@@ -12,7 +12,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Z.EntityFramework.Extensions;
+
 
 namespace BackOfficeAPI
 {
@@ -31,7 +31,7 @@ namespace BackOfficeAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSession();
             services.AddScoped<DbContext, BackOfficeDBContext>();
-            services.AddScoped<Itest, Test>();
+       
 
             services.AddScoped<TransactionFilter>();
             services.AddDbContext<BackOfficeDBContext>();

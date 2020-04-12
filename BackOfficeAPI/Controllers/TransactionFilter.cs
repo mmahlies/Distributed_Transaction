@@ -8,9 +8,9 @@ namespace BackOfficeAPI.Controllers
     internal class TransactionFilter : IActionFilter
     {
         private DbContext _BackOfficeDBContext;
-        private Itest _test;
+     
         private static TransactionScope _transactionScope;
-        public TransactionFilter(DbContext BackOfficeDBContext, Itest test)
+        public TransactionFilter(DbContext BackOfficeDBContext)
         {
            _BackOfficeDBContext = BackOfficeDBContext;
             

@@ -15,7 +15,7 @@ namespace BackOffice
     {
         public BackOfficeDBContext()
         {
-
+            var result = Z.EntityFramework.Extensions.LicenseManager.ValidateLicense(Z.BulkOperations.ProviderType.SqlServer);
         }
 
 

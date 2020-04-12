@@ -9,7 +9,7 @@ namespace BackOffice
 
         public static class MyExtensions
         {
-            public static void RollBack(this TransactionScope transactionScope, DbContext dbContext)
+            public static void RollBack(this DbContext  dbContext)
             {
               dbContext.Database.ExecuteSqlCommand($"rollback tran");
             }
