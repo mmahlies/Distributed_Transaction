@@ -28,7 +28,7 @@ namespace FinancialAPI.Controllers
             object token;
             if (context.ActionArguments.TryGetValue("token", out token))
             {
-                  _transactionScope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromTicks(1), TransactionScopeAsyncFlowOption.Enabled);
+                _transactionScope = new TransactionScope();
                 //   _transactionScope = new TransactionScope();
                 
                 BindSessionToken(token.ToString(), (FinancialDBContext)this._FinancialDBContext);
@@ -36,11 +36,8 @@ namespace FinancialAPI.Controllers
         }
         private static void BindSessionToken(string token, FinancialDBContext dbContextNet)
         {
-            //   dbContextNet.Database.ExecuteSqlCommand($"EXEC sp_bindsession '{token}'");
-            var command = dbContextNet.Database.GetDbConnection().CreateCommand();
-            command.CommandText = $"EXEC sp_bindsession '{token}'";
-            dbContextNet.Database.OpenConnection();
-            var result = command.ExecuteNonQuery();
+            var sqlText = $"EXEC sp_bindsession '{token}'";
+             dbContextNet.Database.ExecuteSqlCommand(sqlText);
         }
     }
 }

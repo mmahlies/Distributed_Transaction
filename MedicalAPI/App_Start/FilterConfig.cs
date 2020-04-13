@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using MedicalAPI.Filter;
+using System.Web;
 using System.Web.Mvc;
 
 namespace MedicalAPI
@@ -8,6 +9,7 @@ namespace MedicalAPI
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new HandleErrorAttribute());
+       //     filters.Add(new TransactionFilter());
         }
     }
 }

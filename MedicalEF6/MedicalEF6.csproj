@@ -56,8 +56,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MedicalContext.cs" />
+    <Compile Include="MedicalLogic.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RollBackEx.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

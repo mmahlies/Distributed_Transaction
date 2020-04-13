@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MedicalAPI.Filter;
+using MedicalEF6;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -9,6 +11,7 @@ namespace MedicalAPI.Controllers
 {
     public class ValuesController : ApiController
     {
+      
         // GET api/values
         public IEnumerable<string> Get()
         {
@@ -21,9 +24,13 @@ namespace MedicalAPI.Controllers
             return "value";
         }
 
+
+       [TransactionFilter]
+
         // POST api/values
-        public void Post([FromBody]string value)
+        public void Post([FromBody]string token)
         {
+            MedicalLogic.Logic();
         }
 
         // PUT api/values/5

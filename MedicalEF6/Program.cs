@@ -17,7 +17,7 @@ namespace MedicalEF6
             //   while (true)
             {
                 // Console.Read();
-                MedicalDTC();
+              //  MedicalDTC();
                 //  Trans();
             }
 
@@ -84,12 +84,7 @@ namespace MedicalEF6
             }
             return result;
         }
-
-        private static void DirectCallDTC(byte[] token)
-        {
-            //  DTC.Dtc dtc = new DTC.Dtc();
-            //dtc.SyncDTCTransaction(token, "");
-        }
+      
 
         private static Task<HttpResponseMessage> CallingBackOffice(string token)
         {

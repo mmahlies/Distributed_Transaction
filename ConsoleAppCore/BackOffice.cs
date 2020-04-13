@@ -12,6 +12,7 @@ using System.Configuration;
 using Microsoft.IdentityModel.Protocols;
 using System.Data;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace BackOffice
 {
@@ -19,23 +20,84 @@ namespace BackOffice
     {
         public static void Main(string[] args)
         {
-
-            //using (TransactionScope inner2Scope = new TransactionScope())
-            //{                
-            //    BackOfficeDBContext dbContextNet = new BackOfficeDBContext();
-            //    BackOfficeDBContext2.BackOfficeDBContext2 BackOfficeDBContext2 = new BackOfficeDBContext2.BackOfficeDBContext2();
-            //    BackOfficeDBContext2.BackOfficeDBContext2 dbContextNet2 = new BackOfficeDBContext2.BackOfficeDBContext2();
-            //    //  string sessionToken = GetSessionTokenFromAdo();
-            //    string sessionToken1 = GetSessionTokenFromDbContext(dbContextNet);
-            //    string sessionToken2 = GetSessionTokenFromDbContext(dbContextNet2);
-
-            //    dbContextNet.Teacher.Add(new Teacher() { Name = "teacher nested" });
-            //    dbContextNet.BulkSaveChanges();
-
-            //    inner2Scope.Complete();
-            //}
+            StarteDTC();
         }
 
+        private static void StarteDTC()
+        {
+            using (TransactionScope scope = new TransactionScope())
+            {
+                //   var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
+                BackOfficeDBContext backOfficeDb = new BackOfficeDBContext();
+                string sessionToken = GetSessionTokenFromDbContext(backOfficeDb);
+                backOfficeDb.Teacher.Add(new Teacher() { Name = "t from back office " });
+                var result = backOfficeDb.SaveChanges();
+                var callingMedical = BackOffice.callingMedical(sessionToken).Result;
+                var  financialResult = CallingFinancial(sessionToken).Result;
+               // Task.WaitAll(callingMedical, financialResult);
+                scope.Complete();
+            }
+            var x = "";
+        }
+
+
+        private static string GetSessionTokenFromAdo()
+        {
+            string result = "";
+            using (SqlConnection connection = new SqlConnection("Data Source=.;User Id=sa;Password=sasa;Initial Catalog=BackOffice"))
+            {
+                SqlCommand command = new SqlCommand();
+                command.Connection = connection;
+                command.CommandText = @"DECLARE @bind_token varchar(255);  
+                                EXECUTE sp_getbindtoken @bind_token OUTPUT;  
+                                SELECT @bind_token AS Token; -- GetSessionTokenFromAdo";
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    {
+                        if (reader.Read())
+                        {
+
+                            result = reader.GetString(0);
+                            reader.Close();
+                        }
+                    }
+                }
+                connection.Close();
+            }
+            return result;
+        }
+
+
+        private static Task<HttpResponseMessage> callingMedical(string token)
+        {
+            HttpClient client = new HttpClient();
+
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:45297/api/values");
+            //; charset=utf-8
+            var serializeToken = JsonConvert.SerializeObject(token);
+
+            HttpContent tokenContent = new StringContent(serializeToken, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = tokenContent;
+
+            // back office api
+            return client.SendAsync(httpRequestMessage);
+
+        }
+
+        private static Task<HttpResponseMessage> CallingFinancial(string token)
+        {
+            HttpClient client = new HttpClient();
+
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:54902/api/values");
+            //; charset=utf-8
+            var serializeToken = JsonConvert.SerializeObject(token);
+
+            HttpContent tokenContent = new StringContent(serializeToken, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = tokenContent;
+
+            return client.SendAsync(httpRequestMessage);
+        }
 
         public async Task<bool> Logic(DbContext generalDbContextNet)
         {
@@ -133,33 +195,7 @@ namespace BackOffice
             return res;
         }
 
-        private static string GetSessionTokenFromAdo()
-        {
-            string result = "";
-            using (SqlConnection connection = new SqlConnection("Data Source=.;User Id=sa;Password=sasa;Initial Catalog=BackOffice"))
-            {
-                SqlCommand command = new SqlCommand();
-                command.Connection = connection;
-                command.CommandText = @"DECLARE @bind_token varchar(255);  
-                                EXECUTE sp_getbindtoken @bind_token OUTPUT;  
-                                SELECT @bind_token AS Token;";
-                connection.Open();
-                using (SqlDataReader reader = command.ExecuteReader())
-                {
-                    {
-                        if (reader.Read())
-                        {
-
-                            result = reader.GetString(0);
-                            reader.Close();
-                        }
-                    }
-                }
-            }
-            return result;
-        }
-
-
+   
     }
 
     class DtcValues

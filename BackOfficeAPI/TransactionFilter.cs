@@ -1,13 +1,15 @@
 ﻿using BackOffice;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
+
 using System.Transactions;
 
 namespace BackOfficeAPI.Controllers
 {
-    internal class TransactionFilter : IActionFilter
+    internal class TransactionFilter : ActionFilterAttribute
     {
         private DbContext _BackOfficeDBContext;
+        Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext
 
         private static TransactionScope _transactionScope;
         public TransactionFilter(DbContext BackOfficeDBContext)
@@ -34,11 +36,10 @@ namespace BackOfficeAPI.Controllers
         }
         private static void BindSessionToken(string token, BackOfficeDBContext dbContextNet)
         {
+            Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext
             //   dbContextNet.Database.ExecuteSqlCommand($"EXEC sp_bindsession '{token}'");
-            var command = dbContextNet.Database.GetDbConnection().CreateCommand();
-            command.CommandText = $"EXEC sp_bindsession '{token}'";
-            dbContextNet.Database.OpenConnection();
-            var result = command.ExecuteNonQuery();
+            var command = dbContextNet.Database.ExecuteSqlCommand($"EXEC sp_bindsession '{token}'");
+          
         }
     }
 }
