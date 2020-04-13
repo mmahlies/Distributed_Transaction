@@ -8,32 +8,29 @@ namespace BackOfficeAPI.Controllers
     internal class TransactionFilter : IActionFilter
     {
         private DbContext _BackOfficeDBContext;
-     
+
         private static TransactionScope _transactionScope;
         public TransactionFilter(DbContext BackOfficeDBContext)
         {
-           _BackOfficeDBContext = BackOfficeDBContext;
-            
-            
+            _BackOfficeDBContext = BackOfficeDBContext;
+
+
         }
         public void OnActionExecuted(ActionExecutedContext context)
         {
+            //_transactionScope.Complete();
             _transactionScope.Dispose();
+            //context.Exception
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
         {
             object token;
-            if(context.ActionArguments.TryGetValue("token", out token))
+            if (context.ActionArguments.TryGetValue("token", out token))
             {
-                _transactionScope  = new TransactionScope();
-                
-                    BindSessionToken(token.ToString(), (BackOfficeDBContext)this._BackOfficeDBContext);
-                
+                _transactionScope = new TransactionScope();
+                BindSessionToken(token.ToString(), (BackOfficeDBContext)this._BackOfficeDBContext);
             }
-
-
-
         }
         private static void BindSessionToken(string token, BackOfficeDBContext dbContextNet)
         {

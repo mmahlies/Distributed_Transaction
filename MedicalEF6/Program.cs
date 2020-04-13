@@ -19,30 +19,33 @@ namespace MedicalEF6
                 // Console.Read();
                 MedicalDTC();
                 //  Trans();
-
             }
 
         }
 
         private static void MedicalDTC()
         {
+
+
+            //   using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled))
             using (TransactionScope scope = new TransactionScope())
             {
                 //   var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
                 MedicalContext medicalContext = new MedicalContext();
-                medicalContext.Student.Add(new Student() { Name = "student from medical " });
-
                 string sessionToken = GetSessionTokenFromAdo();
                 string sessionToken2 = GetSessionTokenFromDbContext(medicalContext);
+                medicalContext.Student.Add(new Student() { Name = "student from medical " });
+
 
                 var result = medicalContext.SaveChanges();
 
+                var backOfficeResult = CallingBackOffice(sessionToken);
+                var finanicalResult = CallingFinancial(sessionToken);
 
-                CallingBackOffice(sessionToken2);
+                Task.WaitAll(new Task[] { backOfficeResult, finanicalResult });
+
                 scope.Complete();
-
             }
-
             var x = "";
         }
 
@@ -52,7 +55,7 @@ namespace MedicalEF6
         {
             return dbContextNet1.Database.SqlQuery<string>(@"DECLARE @bind_token varchar(255);
                                                                         EXECUTE sp_getbindtoken @bind_token OUTPUT;
-                                                                        SELECT @bind_token AS Token; ").FirstOrDefault();
+                                                                        SELECT @bind_token AS Token;  --GetSessionTokenFromDbContext ").FirstOrDefault();
         }
 
         private static string GetSessionTokenFromAdo()
@@ -64,7 +67,7 @@ namespace MedicalEF6
                 command.Connection = connection;
                 command.CommandText = @"DECLARE @bind_token varchar(255);  
                                 EXECUTE sp_getbindtoken @bind_token OUTPUT;  
-                                SELECT @bind_token AS Token;";
+                                SELECT @bind_token AS Token; -- GetSessionTokenFromAdo";
                 connection.Open();
                 using (SqlDataReader reader = command.ExecuteReader())
                 {
@@ -77,6 +80,7 @@ namespace MedicalEF6
                         }
                     }
                 }
+                connection.Close();
             }
             return result;
         }
@@ -87,7 +91,7 @@ namespace MedicalEF6
             //dtc.SyncDTCTransaction(token, "");
         }
 
-        private static void CallingBackOffice(string token)
+        private static Task<HttpResponseMessage> CallingBackOffice(string token)
         {
             HttpClient client = new HttpClient();
 
@@ -99,9 +103,23 @@ namespace MedicalEF6
             httpRequestMessage.Content = tokenContent;
 
             // back office api
-            HttpResponseMessage response = client.SendAsync(httpRequestMessage).Result;
-            var x = "";
+            return client.SendAsync(httpRequestMessage);
+
         }
+        private static Task<HttpResponseMessage> CallingFinancial(string token)
+        {
+            HttpClient client = new HttpClient();
+
+            HttpRequestMessage httpRequestMessage = new HttpRequestMessage(HttpMethod.Post, "http://localhost:54902/api/values");
+            //; charset=utf-8
+            var serializeToken = JsonConvert.SerializeObject(token);
+
+            HttpContent tokenContent = new StringContent(serializeToken, Encoding.UTF8, "application/json");
+            httpRequestMessage.Content = tokenContent;
+
+            return client.SendAsync(httpRequestMessage);
+        }
+        //
 
         private static void TransactionManager_DistributedTransactionStarted(object sender, TransactionEventArgs e)
         {

@@ -250,9 +250,9 @@
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ConsoleAppNet\Medical.csproj">
-      <Project>{70e4af03-4f83-437d-9fd2-969ab674024e}</Project>
-      <Name>Medical</Name>
+    <ProjectReference Include="..\MedicalEF6\MedicalEF6.csproj">
+      <Project>{648c1a67-e393-4f03-92bd-d5212fc16dbb}</Project>
+      <Name>MedicalEF6</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
