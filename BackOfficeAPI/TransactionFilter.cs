@@ -1,7 +1,7 @@
 ﻿using BackOffice;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-
+using System;
 using System.Transactions;
 
 namespace BackOfficeAPI.Controllers
@@ -9,7 +9,7 @@ namespace BackOfficeAPI.Controllers
     internal class TransactionFilter : ActionFilterAttribute
     {
         private DbContext _BackOfficeDBContext;
-        Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext
+    
 
         private static TransactionScope _transactionScope;
         public TransactionFilter(DbContext BackOfficeDBContext)
@@ -21,6 +21,12 @@ namespace BackOfficeAPI.Controllers
         public void OnActionExecuted(ActionExecutedContext context)
         {
             //_transactionScope.Complete();
+            if (context.Exception != null)
+            {
+                // rollback
+                var sqlText = "rollback tran";
+                this._BackOfficeDBContext.Database.ExecuteSqlCommand(sqlText);
+            }
             _transactionScope.Dispose();
             //context.Exception
         }
@@ -30,13 +36,18 @@ namespace BackOfficeAPI.Controllers
             object token;
             if (context.ActionArguments.TryGetValue("token", out token))
             {
-                _transactionScope = new TransactionScope();
+                //    _transactionScope = new TransactionScope();
+                TimeSpan transactionTimeOut = TimeSpan.MaxValue;//long.Parse(Core.Utilities.Support.Configuration.GetConfig("transactionTimeOut"));
+                TransactionOptions options = new TransactionOptions();
+                options.IsolationLevel = System.Transactions.IsolationLevel.ReadCommitted;
+                options.Timeout = transactionTimeOut;
+                _transactionScope = new TransactionScope(TransactionScopeOption.Required, options, TransactionScopeAsyncFlowOption.Enabled);
                 BindSessionToken(token.ToString(), (BackOfficeDBContext)this._BackOfficeDBContext);
             }
         }
         private static void BindSessionToken(string token, BackOfficeDBContext dbContextNet)
         {
-            Microsoft.AspNetCore.Mvc.Filters.ActionExecutedContext
+          
             //   dbContextNet.Database.ExecuteSqlCommand($"EXEC sp_bindsession '{token}'");
             var command = dbContextNet.Database.ExecuteSqlCommand($"EXEC sp_bindsession '{token}'");
           

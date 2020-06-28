@@ -20,12 +20,12 @@ namespace BackOffice
     {
         public static void Main(string[] args)
         {
-            StarteDTC();
+         //   StarteDTC();
         }
 
         private static void StarteDTC()
         {
-            using (TransactionScope scope = new TransactionScope())
+            using (TransactionScope scope  =  new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled))
             {
                 //   var token = TransactionInterop.GetTransmitterPropagationToken(Transaction.Current);
                 BackOfficeDBContext backOfficeDb = new BackOfficeDBContext();
@@ -34,6 +34,7 @@ namespace BackOffice
                 var result = backOfficeDb.SaveChanges();
                 var callingMedical = BackOffice.callingMedical(sessionToken).Result;
                 var  financialResult = CallingFinancial(sessionToken).Result;
+            
                // Task.WaitAll(callingMedical, financialResult);
                 scope.Complete();
             }
@@ -80,6 +81,7 @@ namespace BackOffice
             HttpContent tokenContent = new StringContent(serializeToken, Encoding.UTF8, "application/json");
             httpRequestMessage.Content = tokenContent;
 
+            httpRequestMessage.Headers.Add("SqlTransactionToken", token);
             // back office api
             return client.SendAsync(httpRequestMessage);
 
@@ -111,7 +113,7 @@ namespace BackOffice
                     dbContextNet.BulkSaveChanges();
 
                     await AsyncTask(dbContextNet);
-
+                    throw new Exception();
                     innerScope1.Complete();
                     //     dbContextNet.RollBack();
                 }

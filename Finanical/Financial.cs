@@ -11,29 +11,32 @@ namespace Financial
     {
         static void Main(string[] args)
         {
-           
+     
         }
 
 
         public bool Logic(DbContext generalDbContextNet)
         {
             // simulate havy oparions
-            Thread.Sleep(5);
+           // Thread.Sleep(5);
+          
             FinancialDBContext dbContextNet = (FinancialDBContext)generalDbContextNet;
             try
             {
-                using (TransactionScope innerScope1 = new TransactionScope())
+                using (TransactionScope innerScope1 = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled))
                 {
+                  //  var state = Transaction.Current.TransactionInformation.Status;
                     dbContextNet.tb_Financial.Add(new tb_Financial() { Name = "Finanical Row1" });
-                    dbContextNet.BulkSaveChanges();
+                    dbContextNet.SaveChanges();
 
-                    using (TransactionScope inner2Scope = new TransactionScope())
+                    using (TransactionScope inner2Scope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled))
                     {
                         dbContextNet.tb_Financial.Add(new tb_Financial() { Name = "Finanical Row2" });
                         //  dbContextNet.SaveChanges();                      
                         //inner2Scope.RollBack(dbContextNet);
                         dbContextNet.BulkSaveChanges();
                         inner2Scope.Complete();
+                        throw new Exception();
                     }
                     innerScope1.Complete();
                    //  dbContextNet.RollBack();
@@ -43,6 +46,12 @@ namespace Financial
             catch (Exception ex)
             {
                 // ex handling 
+                var sqlText = "rollback tran";
+
+                var state = Transaction.Current.TransactionInformation.Status;
+
+
+                //  dbContextNet.Database.ExecuteSqlCommand(sqlText);
                 throw ex;
                 var x = "";
 

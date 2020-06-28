@@ -17,7 +17,8 @@ namespace MedicalEF6
                 using (TransactionScope innerScope1 = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled))
                 {
                     dbContextNet.Student.Add(new Student() { Name = "student from medical" });
-                    dbContextNet.SaveChanges();                   
+                    dbContextNet.SaveChanges();
+                    throw new Exception();
                     innerScope1.Complete();
                 //     dbContextNet.RollBack();
                 }
@@ -30,7 +31,13 @@ namespace MedicalEF6
             catch (Exception ex)
             {
                 // ex handling 
-                throw ex;
+                var sqlText = "select 1 ";
+
+
+
+
+                dbContextNet.Database.ExecuteSqlCommand(sqlText);
+                //    throw ex;
                 var x = "";
 
                 //  dbContextNet.Database.ExecuteSqlRaw($"EXEC sp_bindsession NULL");

@@ -1,15 +1,20 @@
 ﻿
 
+using Autofac.Integration.WebApi;
 using MedicalEF6;
 using System;
+using System.Collections.Generic;
 using System.Data.Entity;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Transactions;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
 namespace MedicalAPI.Filter
 {
-    internal class TransactionFilter :  ActionFilterAttribute
+    public class TransactionFilter :  IAutofacActionFilter
     {
         private DbContext _medicalDBContext;
 
@@ -17,17 +22,32 @@ namespace MedicalAPI.Filter
 
         public TransactionFilter()
         {
-           _medicalDBContext = new MedicalContext();
-        }
-        public override void OnActionExecuted(HttpActionExecutedContext context)
-        {
-            _transactionScope.Dispose();
+
         }
 
-        public override void OnActionExecuting(HttpActionContext context)
+        public TransactionFilter(DbContext dbContext)
         {
+            _medicalDBContext = dbContext;
+        }
+        public  void OnActionExecuted(HttpActionExecutedContext context)
+        {
+            try
+            {
+                _transactionScope.Dispose();
+            }
+            catch (Exception)
+            {
+                // cant dispose opened transactionScope
+            }
+
+        }
+
+        public  void OnActionExecuting(HttpActionContext context)
+        {
+            IEnumerable<string> values;
+            context.Request.Headers.TryGetValues("SqlTransactionToken", out values);
+            var xx = values.FirstOrDefault();
             object token;
-            
             if (context.ActionArguments.TryGetValue("token", out token))
             {
                 _transactionScope = new TransactionScope();
@@ -45,5 +65,14 @@ namespace MedicalAPI.Filter
             dbContextNet.Database.Connection.Close();
         }
 
+        public Task OnActionExecutedAsync(HttpActionExecutedContext actionExecutedContext, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(0);
+        }
+
+        public Task OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(0);
+        }
     }
 }

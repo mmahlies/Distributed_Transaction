@@ -2,6 +2,7 @@
 using MedicalEF6;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -11,7 +12,22 @@ namespace MedicalAPI.Controllers
 {
     public class ValuesController : ApiController
     {
-      
+
+        private DbContext _dbContext;
+        public ValuesController()
+        {
+
+        }
+
+
+        public ValuesController(DbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
+        
+        [Route("ping")]
+        [HttpGet]
         // GET api/values
         public IEnumerable<string> Get()
         {
@@ -25,7 +41,7 @@ namespace MedicalAPI.Controllers
         }
 
 
-       [TransactionFilter]
+     
 
         // POST api/values
         public void Post([FromBody]string token)

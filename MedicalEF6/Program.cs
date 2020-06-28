@@ -17,8 +17,9 @@ namespace MedicalEF6
             //   while (true)
             {
                 // Console.Read();
-              //  MedicalDTC();
+                  MedicalDTC();
                 //  Trans();
+               // MedicalLogic.Logic();
             }
 
         }
@@ -39,10 +40,10 @@ namespace MedicalEF6
 
                 var result = medicalContext.SaveChanges();
 
-                var backOfficeResult = CallingBackOffice(sessionToken);
+              //  var backOfficeResult = CallingBackOffice(sessionToken);
                 var finanicalResult = CallingFinancial(sessionToken);
 
-                Task.WaitAll(new Task[] { backOfficeResult, finanicalResult });
+                Task.WaitAll(new Task[] {  finanicalResult });
 
                 scope.Complete();
             }

@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using System.Configuration;
+using Microsoft.Extensions.Configuration;
 
 namespace BackOfficeAPI.Controllers
 {
@@ -13,20 +15,24 @@ namespace BackOfficeAPI.Controllers
     public class ValuesController : ControllerBase
     {
         private DbContext _BackOfficeDBContext;
-      
-        public ValuesController(DbContext BackOfficeDBContext)
+        private IConfiguration _iConfig;
+
+        public ValuesController(DbContext BackOfficeDBContext, IConfiguration iConfig)
         {
             _BackOfficeDBContext = BackOfficeDBContext;
-    
-       
+            _iConfig = iConfig;
+
+
         }
         // GET api/values
      
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            
 
+            var xx = ConfigurationManager.AppSettings.AllKeys;
+          var x=   ConfigurationManager.GetSection("Modules:Logging:logDb"); ;
+         
             return new string[] { "value1", "value2" };
         }
 
@@ -38,9 +44,8 @@ namespace BackOfficeAPI.Controllers
         }
 
 
-        [ServiceFilter(typeof(TransactionFilter))]
-
         // POST api/values
+        [ServiceFilter(typeof(TransactionFilter))]
         [HttpPost]
         public void Post([FromBody]  string token)
         {

@@ -19,8 +19,23 @@ namespace FinancialAPI.Controllers
         }
         public void OnActionExecuted(ActionExecutedContext context)
         {
-           
-            _transactionScope.Dispose();
+            // dispose the tranacion scope
+            if (_transactionScope != null)
+            {
+                _transactionScope.Dispose();
+            }
+
+
+            if (context.Exception != null)
+            {
+                // rollback                
+                _FinancialDBContext.Database.ExecuteSqlCommand($"rollback tran");
+            }
+
+
+
+
+
         }
 
         public void OnActionExecuting(ActionExecutingContext context)
@@ -28,16 +43,29 @@ namespace FinancialAPI.Controllers
             object token;
             if (context.ActionArguments.TryGetValue("token", out token))
             {
-                _transactionScope = new TransactionScope();
-                //   _transactionScope = new TransactionScope();
-                
-                BindSessionToken(token.ToString(), (FinancialDBContext)this._FinancialDBContext);
+
+                _transactionScope = new TransactionScope(TransactionScopeOption.Required, TimeSpan.FromMinutes(5), TransactionScopeAsyncFlowOption.Enabled);
+                //   _transactionScope = new TransactionScope();                
+
+                BindSessionToken(token.ToString(), _FinancialDBContext);
             }
         }
-        private static void BindSessionToken(string token, FinancialDBContext dbContextNet)
+        private static void BindSessionToken(string token, DbContext dbContextNet)
         {
             var sqlText = $"EXEC sp_bindsession '{token}'";
-             dbContextNet.Database.ExecuteSqlCommand(sqlText);
+            dbContextNet.Database.ExecuteSqlCommand(sqlText);
         }
+
+
+        private static void ExecuteNonQuery(DbContext dbContextNet, string sql)
+        {
+            //   dbContextNet.Database.ExecuteSqlCommand($"EXEC sp_bindsession '{token}'");
+            var command = dbContextNet.Database.GetDbConnection().CreateCommand();
+            command.CommandText = sql;
+            dbContextNet.Database.OpenConnection();
+            var result = command.ExecuteNonQuery();
+            dbContextNet.Database.CloseConnection();
+        }
+
     }
 }
